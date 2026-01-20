@@ -9,10 +9,19 @@ cargo build
 ./target/debug/zeep --input ./resources/aacc/CustomerWS.wsdl --output ./examples/aacc/customer.rs
 ./target/debug/zeep --input ./resources/claim_service/claim_service.wsdl --output ./examples/claim_service/claim_service.rs
 
-# Format the output
-rustfmt --color=always --edition=2024 examples/aic/aic.rs
-rustfmt --color=always --edition=2024 examples/hello/hello.rs
-rustfmt --color=always --edition=2024 examples/temperature/tempconverter.rs
-rustfmt --color=always --edition=2024 examples/exchange/services.rs
-rustfmt --color=always --edition=2024 examples/aacc/customer.rs
-rustfmt --color=always --edition=2024 examples/claim_service/claim_service.rs
+# Use cargo +nightly fmt when available, otherwise use stable
+if cargo +nightly fmt --version > /dev/null 2>&1; then
+    FMT_CMD="cargo +nightly fmt --"
+else
+    FMT_CMD="cargo fmt --"
+fi
+
+# Format all generated files
+for file in examples/aic/aic.rs \
+            examples/hello/hello.rs \
+            examples/temperature/tempconverter.rs \
+            examples/exchange/services.rs \
+            examples/aacc/customer.rs \
+            examples/claim_service/claim_service.rs; do
+    $FMT_CMD "$file"
+done
