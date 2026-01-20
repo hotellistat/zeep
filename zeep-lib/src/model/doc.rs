@@ -275,7 +275,7 @@ fn make_abbreviated_namespace(namespace: &str, existing_namespaces: &[Rc<Namespa
 
     let mut append: Option<u8> = None;
 
-    let abbreviation = if let Some(last_segment) = namespace.split('/').filter(|it| !it.is_empty()).next_back() {
+    let abbreviation = if let Some(last_segment) = namespace.split('/').rfind(|it| !it.is_empty()) {
         if let Some(slashed) = last_segment.split('-').next_back() {
             take_three_chars_max(slashed)
         } else {

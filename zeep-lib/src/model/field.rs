@@ -73,7 +73,7 @@ impl<'n> TryFromNode<'n> for Field {
                 /* This is a reference to an XML type */
                 return Ok(Field {
                     xml_name: xml_name.to_string(),
-                    rust_name: rust_name.to_string(),
+                    rust_name,
                     rust_type: RustFieldType::String,
                     is_optional,
                     is_vec,

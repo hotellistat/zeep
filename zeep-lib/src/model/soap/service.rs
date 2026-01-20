@@ -81,6 +81,44 @@ where
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
+        // create a default method
+        writeln!(writer)?;
+        writeln!(writer, "    pub fn default() -> Self {{")?;
+        writeln!(writer, "        Self {{")?;
+        writeln!(writer, "            client: reqwest::Client::new(),")?;
+        writeln!(writer, "            location: \"{}\".to_string(),", self.location)?;
+        writeln!(writer, "            credentials: None,")?;
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+
+        // create builder pattern methods
+        writeln!(writer)?;
+        writeln!(
+            writer,
+            "    pub fn with_client(mut self, client: reqwest::Client) -> Self {{"
+        )?;
+        writeln!(writer, "        self.client = client;")?;
+        writeln!(writer, "        self")?;
+        writeln!(writer, "    }}")?;
+
+        writeln!(writer)?;
+        writeln!(
+            writer,
+            "    pub fn with_location(mut self, location: impl Into<String>) -> Self {{"
+        )?;
+        writeln!(writer, "        self.location = location.into();")?;
+        writeln!(writer, "        self")?;
+        writeln!(writer, "    }}")?;
+
+        writeln!(writer)?;
+        writeln!(
+            writer,
+            "    pub fn with_credentials(mut self, credentials: (String, String)) -> Self {{"
+        )?;
+        writeln!(writer, "        self.credentials = Some(credentials);")?;
+        writeln!(writer, "        self")?;
+        writeln!(writer, "    }}")?;
+
         // create a method for each operation
         for (operation_name, operation) in &self.binding.operations {
             write_async_soap_call(writer, operation_name, operation)?;
