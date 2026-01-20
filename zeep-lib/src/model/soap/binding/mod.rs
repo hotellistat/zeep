@@ -213,18 +213,35 @@ fn map_to_rust_node(
 fn read_header_port_message<'n>(
     doc: &mut RustDocument,
     n: Node<'n, 'n>,
-    port_operation: &port::SoapOperation,
-    in_or_out: InputOrOutput,
+    _port_operation: &port::SoapOperation,
+    _in_or_out: InputOrOutput,
     _operation_name: Option<&str>,
 ) -> WriterResult<(XmlName, Rc<RustNode>)> {
-    // get header part
+    // get header part name
     let part = n
         .attribute("part")
         .ok_or_else(|| WriterError::attribute_missing(&n, "part"))?;
 
-    // lookup the message on the port type
-    let rust_node = map_to_rust_node(doc, port_operation, in_or_out, part)?;
-    Ok((part.to_string(), rust_node))
+    // get the message attribute - headers reference separate messages
+    let message = n
+        .attribute("message")
+        .ok_or_else(|| WriterError::attribute_missing(&n, "message"))?;
+
+    // resolve the message name (handles namespace prefix like "tns:MessageName")
+    let (message_name, namespace) = resolve_type(message, doc);
+
+    // lookup the header message
+    let header_message = doc
+        .find_message_by_xml_name(message_name, namespace.as_deref())
+        .ok_or(WriterError::MessageNotFound(message_name.to_string()))?;
+
+    // get the part from the header message
+    let (rust_node, _namespace) = header_message
+        .parts
+        .get(part)
+        .ok_or(WriterError::NodeNotFound(part.to_string()))?;
+
+    Ok((part.to_string(), rust_node.clone()))
 }
 
 #[cfg(test)]

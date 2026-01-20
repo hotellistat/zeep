@@ -213,11 +213,7 @@ impl XmlReader {
                 any = true;
             }
         }
-        if any {
-            Ok(())
-        } else {
-            Err(WriterError::SchemaNotFound)
-        }
+        if any { Ok(()) } else { Err(WriterError::SchemaNotFound) }
     }
 
     fn read_xsd<'n>(node: Node<'n, 'n>, files: &Files, doc: &mut RustDocument) -> WriterResult<()> {
@@ -505,5 +501,55 @@ mod tests {
         assert_eq!(props.fields.len(), 1);
         let greeting_field = props.fields.first().unwrap();
         assert_eq!(greeting_field.xml_name, "Body");
+    }
+
+    #[test]
+    fn can_read_wsdl_file_with_service_security_header() {
+        const WSDL: &str = include_str!("../test-data/claim_service.wsdl");
+        let files = Files::new("claim_service.wsdl", WSDL);
+        let (file_name, file) = files.map.get_key_value("claim_service.wsdl").unwrap();
+        let rust_doc = XmlReader::read_xml_internal(file, file_name, &files).unwrap();
+
+        // The WSDL has many elements and complex types
+        assert_eq!(rust_doc.nodes.len(), 78);
+
+        // Verify that GetClaim element exists
+        let get_claim_node = rust_doc
+            .nodes
+            .iter()
+            .find(|n| n.rust_type.xml_name() == Some("GetClaim"))
+            .expect("GetClaim element should exist");
+        assert_eq!(get_claim_node.rust_type.xml_name(), Some("GetClaim"));
+
+        // Verify that ServiceSecurityHeader exists (the element that was causing the error)
+        let security_header_node = rust_doc
+            .nodes
+            .iter()
+            .find(|n| n.rust_type.xml_name() == Some("ServiceSecurityHeader"))
+            .expect("ServiceSecurityHeader element should exist");
+        assert_eq!(security_header_node.rust_type.xml_name(), Some("ServiceSecurityHeader"));
+
+        // Verify that SOAP messages were read (including header messages)
+        assert!(rust_doc.soap_messages.len() > 0);
+
+        // Verify the header message for GetClaim exists
+        let header_message = rust_doc
+            .soap_messages
+            .iter()
+            .find(|m| m.xml_name == "GetClaimServiceSecurityHeader")
+            .expect("GetClaimServiceSecurityHeader message should exist");
+        assert!(header_message.parts.contains_key("ServiceSecurityHeader"));
+
+        // Verify that SOAP bindings were read
+        assert_eq!(rust_doc.soap_bindings.len(), 2); // soap and soap12 bindings
+
+        // Verify that the binding operations have headers
+        let binding = &rust_doc.soap_bindings[0];
+        let get_claim_operation = binding
+            .operations
+            .get("GetClaim")
+            .expect("GetClaim operation should exist");
+        assert_eq!(get_claim_operation.input.headers.len(), 1);
+        assert_eq!(get_claim_operation.input.headers[0].0, "ServiceSecurityHeader");
     }
 }

@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://services.lighthouse1.com/services/claim/" xmlns:s2="http://services.lighthouse1.com/ClaimService/ClaimMseeages.xsd" xmlns:s1="http://services.lighthouse1.com/ClaimService/ClaimMessages.xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://services.lighthouse1.com/services/claim/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.lighthouse1.com/services/claim/">
+      <s:import namespace="http://services.lighthouse1.com/ClaimService/ClaimMessages.xsd" />
+      <s:import namespace="http://services.lighthouse1.com/ClaimService/ClaimMseeages.xsd" />
+      <s:element name="GetClaim">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:getClaimRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetClaimResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:GetClaimResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ServiceSecurityHeader" type="tns:ServiceSecurityHeader" />
+      <s:complexType name="ServiceSecurityHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Token" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AdminAlias" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NewClaimsLinkSystemResourceId" nillable="true" type="s:short" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="SubmitClaimBasket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:submitClaimBasketRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitClaimBasketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:SubmitClaimBasketResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitExpenseBasket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:submitClaimBasketRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitExpenseBasketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:SubmitExpenseBasketResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitExpenses">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:submitClaimBasketRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitExpensesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:SubmitExpensesResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitExpenseNoAdvice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:submitClaimBasketRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitExpenseNoAdviceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s2:SubmitExpenseNoAdviceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ApproveExpenses">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:submitClaimWorksheetRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ApproveExpensesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:ApproveExpensesResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMileageRates">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetMileageRatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMileageRatesResult" type="tns:ArrayOfMileageRate" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfMileageRate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MileageRate" nillable="true" type="tns:MileageRate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MileageRate">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="MileageRateValue" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="EffectiveDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetPlanMaxAmounts">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetPlanMaxAmountsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPlanMaxAmountsResult" type="tns:ArrayOfPlanMaxAmount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPlanMaxAmount">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PlanMaxAmount" nillable="true" type="tns:PlanMaxAmount" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PlanMaxAmount">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PlanType" type="tns:PlanType" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="EffectiveDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="PlanType">
+        <s:restriction base="s:string">
+          <s:enumeration value="MedicalFlex" />
+          <s:enumeration value="DependentCare" />
+          <s:enumeration value="HRA" />
+          <s:enumeration value="HRADeductibles" />
+          <s:enumeration value="HRADental" />
+          <s:enumeration value="HRAVision" />
+          <s:enumeration value="HSA" />
+          <s:enumeration value="IndividualPremium" />
+          <s:enumeration value="MassTransit" />
+          <s:enumeration value="Parking" />
+          <s:enumeration value="VEBA" />
+          <s:enumeration value="DefinedContribution" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetLifetimeMaximumInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="individualId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLifetimeMaximumInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLifetimeMaximumInformationResult" type="tns:LifetimeMaximumStorage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="LifetimeMaximumStorage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="tempProperties" type="tns:ArrayOfSerializableKeyValuePairOfInt32String" />
+          <s:element minOccurs="0" maxOccurs="1" name="Dependents" type="tns:ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximumRecipientDetail" />
+          <s:element minOccurs="0" maxOccurs="1" name="Participants" type="tns:ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximumRecipientDetail" />
+          <s:element minOccurs="0" maxOccurs="1" name="LifetimeMaximums" type="tns:ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximum" />
+          <s:element minOccurs="0" maxOccurs="1" name="OfferingsWithoutLifetimeMaximum" type="tns:ArrayOfInt" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSerializableKeyValuePairOfInt32String">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SerializableKeyValuePairOfInt32String" nillable="true" type="tns:SerializableKeyValuePairOfInt32String" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SerializableKeyValuePairOfInt32String">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Key" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximumRecipientDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SerializableKeyValuePairOfInt32LifetimeMaximumRecipientDetail" nillable="true" type="tns:SerializableKeyValuePairOfInt32LifetimeMaximumRecipientDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SerializableKeyValuePairOfInt32LifetimeMaximumRecipientDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Key" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="tns:LifetimeMaximumRecipientDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LifetimeMaximumRecipientDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RecipientId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecipientType" type="tns:RecipientType" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ListOfPlanBalance" type="tns:ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximumPlanBalance" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="RecipientType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Individual" />
+          <s:enumeration value="Dependent" />
+          <s:enumeration value="External" />
+          <s:enumeration value="Provider" />
+          <s:enumeration value="Unspecified" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximumPlanBalance">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SerializableKeyValuePairOfInt32LifetimeMaximumPlanBalance" nillable="true" type="tns:SerializableKeyValuePairOfInt32LifetimeMaximumPlanBalance" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SerializableKeyValuePairOfInt32LifetimeMaximumPlanBalance">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Key" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="tns:LifetimeMaximumPlanBalance" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LifetimeMaximumPlanBalance">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="OfferingId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Submitted" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Paid" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Pending" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Denied" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DynamicApprovedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DynamicProposedAmount" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSerializableKeyValuePairOfInt32LifetimeMaximum">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SerializableKeyValuePairOfInt32LifetimeMaximum" nillable="true" type="tns:SerializableKeyValuePairOfInt32LifetimeMaximum" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SerializableKeyValuePairOfInt32LifetimeMaximum">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Key" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="tns:LifetimeMaximum" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LifetimeMaximum">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="LifetimeMaximumID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SystemName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EmployerId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="StatusChangedDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="AllPlans" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="OfferingIds" type="tns:ArrayOfInt" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetExpenseApprovedAmount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="individualId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="offeringId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="eligibleExpenseId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetExpenseApprovedAmountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetExpenseApprovedAmountResult" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBaseExpenseAccounts">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetBaseExpenseAccountsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBaseExpenseAccountsResult" type="tns:ArrayOfExpenseAccountBase" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfExpenseAccountBase">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ExpenseAccountBase" nillable="true" type="s1:ExpenseAccountBase" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.lighthouse1.com/ClaimService/ClaimMessages.xsd">
+      <s:element name="getClaimRequest" type="s1:GetClaimRequest" />
+      <s:complexType name="GetClaimRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ClaimNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetClaimResult" type="s1:GetClaimResponse" />
+      <s:complexType name="GetClaimResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Claim" type="s1:Claim" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Claim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimAccount" type="s1:ClaimAccount" />
+          <s:element minOccurs="1" maxOccurs="1" name="ClaimAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimNotes" type="s1:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="ClaimStatus" type="s1:ClaimStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="DenialCode" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MultipleDenialCodes" nillable="true" type="s1:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasValidReceipt" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="IsDuplicate" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="MileageAmount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MileageRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OfferingID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Provider" type="s1:Provider" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReceiptStatus" type="s1:ReceiptStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="Recipients" type="s1:ArrayOfServiceRecipient" />
+          <s:element minOccurs="0" maxOccurs="1" name="SendDenial" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomDenialText" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="EligibleExpenseId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceCategory" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceDescription" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceEndDate" type="s:date" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceRecipient" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceStartDate" type="s:date" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SubmissionDate" type="s:date" />
+          <s:element minOccurs="0" maxOccurs="1" name="ImageId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReceivedDate" nillable="true" type="s:date" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReceivedDateSpecified" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="MileageRealAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="AmountOwed" nillable="true" type="s:decimal" />
+        </s:sequence>
+        <s:attribute name="ClaimIdentifier" type="s:string" />
+        <s:attribute name="ClaimNumber" type="s:string" />
+      </s:complexType>
+      <s:complexType name="ClaimAccount">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ApprovedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeniedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PaidAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PendingAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CopayAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CoinsuranceAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeductibleAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PostedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="SubmittedAmount" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Note" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ClaimStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="BankingFailedStatus" />
+          <s:enumeration value="DeniedCollectingRepaymentStatus" />
+          <s:enumeration value="DeniedStatus" />
+          <s:enumeration value="FreezeStatus" />
+          <s:enumeration value="HoldStatus" />
+          <s:enumeration value="PaidStatus" />
+          <s:enumeration value="PendingReceiptStatus" />
+          <s:enumeration value="PendingReimbursementStatus" />
+          <s:enumeration value="ScheduledReimbursementStatus" />
+          <s:enumeration value="Unspecified" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Provider">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PTP" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Number" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tin" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine4" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StateCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CountryCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZipCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ReceiptStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="ReceiptRequired" />
+          <s:enumeration value="ReceiptReceived" />
+          <s:enumeration value="ReceiptOverdue" />
+          <s:enumeration value="ReceiptNotNeeded" />
+          <s:enumeration value="Unspecified" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfServiceRecipient">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ServiceRecipient" type="s1:ServiceRecipient" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ServiceRecipient">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RecipientID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="RecipientType" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="submitClaimBasketRequest" type="s1:SubmitClaimBasketRequest" />
+      <s:complexType name="SubmitClaimBasketRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Administrator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimBasket" type="s1:ClaimBasket" />
+          <s:element minOccurs="0" maxOccurs="1" name="Employer" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParticipantID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SendConfirmation" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="AllowPayToProvider" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ClaimBasket">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Claim" type="s1:Claim" />
+        </s:sequence>
+        <s:attribute name="BasketIdentifier" type="s:string" />
+      </s:complexType>
+      <s:element name="SubmitClaimBasketResult" type="s1:SubmitClaimBasketResponse" />
+      <s:complexType name="SubmitClaimBasketResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BasketIdentifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FiledClaims" type="s1:ArrayOfFiledClaim" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfFiledClaim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="FiledClaim" type="s1:FiledClaim" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FiledClaim">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ApprovedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeniedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PaidAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PendingAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CopayAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CoinsuranceAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeductibleAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PostedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="SubmittedAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="PlanName_PlanYear" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimIdentifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FilingStatus" type="s1:FilingStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="IsDuplicate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimStatus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PayToProviderFlag" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MultipleDenialCodes" type="s1:ArrayOfInt" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="FilingStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Success" />
+          <s:enumeration value="Failure" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="SubmitExpenseBasketResult" type="s1:SubmitClaimBasketResponse" />
+      <s:element name="SubmitExpensesResult" type="s1:SubmitClaimWorksheetResponse" />
+      <s:complexType name="SubmitClaimWorksheetResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BasketIdentifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProposedClaims" type="s1:ArrayOfProposedClaim" />
+          <s:element minOccurs="0" maxOccurs="1" name="RecommendationHtml" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasAutoDenial" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpecialDenialCode" type="s1:SpecialDenialCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfProposedClaim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ProposedClaim" type="s1:ProposedClaim" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ProposedClaim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimIdentifier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpenseDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="PlanName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PlanYear" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ApprovedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeniedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PaidAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PendingAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeductibleAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CoinsuranceAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CopayAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PostedAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="SubmittedAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PayToProviderFlag" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SpecialDenialCode">
+        <s:restriction base="s:string">
+          <s:enumeration value="Default" />
+          <s:enumeration value="LifetimeMaximumIsExceeded" />
+          <s:enumeration value="ExpenseMaximumIsExceeded" />
+          <s:enumeration value="IndividualMaximumIsExceeded" />
+          <s:enumeration value="SharedMaximumIsExceeded" />
+          <s:enumeration value="SharedIndividualMaximumIsExceeded" />
+          <s:enumeration value="GroupMaxReimburseAmtIsExceeded" />
+          <s:enumeration value="ExpensePerClaimMaximumExceeded" />
+          <s:enumeration value="PlanLimitExceeded" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="SubmitExpenseNoAdviceResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BasketIdentifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FiledClaims" type="s1:ArrayOfFiledClaim" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProposedClaims" type="s1:ArrayOfProposedClaim" />
+          <s:element minOccurs="0" maxOccurs="1" name="RecommendationHtml" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasAutoDenial" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="HasClaimFiled" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="submitClaimWorksheetRequest" type="s1:SubmitClaimWorksheetRequest" />
+      <s:complexType name="SubmitClaimWorksheetRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Administrator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClaimWorksheet" type="s1:ClaimWorksheet" />
+          <s:element minOccurs="0" maxOccurs="1" name="Employer" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParticipantID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SendConfirmation" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SendAutoDenial" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ClaimWorksheet">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Claim" type="s1:Claim" />
+        </s:sequence>
+        <s:attribute name="WorksheetIdentifier" type="s:string" />
+      </s:complexType>
+      <s:element name="ApproveExpensesResult" type="s1:SubmitClaimBasketResponse" />
+      <s:complexType name="ExpenseAccountBase">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ExpenseAccountId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.lighthouse1.com/ClaimService/ClaimMseeages.xsd">
+      <s:import namespace="http://services.lighthouse1.com/ClaimService/ClaimMessages.xsd" />
+      <s:element name="SubmitExpenseNoAdviceResult" type="s1:SubmitExpenseNoAdviceResponse" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetClaimSoapIn">
+    <wsdl:part name="parameters" element="tns:GetClaim" />
+  </wsdl:message>
+  <wsdl:message name="GetClaimSoapOut">
+    <wsdl:part name="parameters" element="tns:GetClaimResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetClaimServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="SubmitClaimBasketSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitClaimBasket" />
+  </wsdl:message>
+  <wsdl:message name="SubmitClaimBasketSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitClaimBasketResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitClaimBasketServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpenseBasketSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitExpenseBasket" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpenseBasketSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitExpenseBasketResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpenseBasketServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpensesSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitExpenses" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpensesSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitExpensesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpensesServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpenseNoAdviceSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitExpenseNoAdvice" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpenseNoAdviceSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitExpenseNoAdviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitExpenseNoAdviceServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="ApproveExpensesSoapIn">
+    <wsdl:part name="parameters" element="tns:ApproveExpenses" />
+  </wsdl:message>
+  <wsdl:message name="ApproveExpensesSoapOut">
+    <wsdl:part name="parameters" element="tns:ApproveExpensesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ApproveExpensesServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetMileageRatesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMileageRates" />
+  </wsdl:message>
+  <wsdl:message name="GetMileageRatesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMileageRatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMileageRatesServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetPlanMaxAmountsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPlanMaxAmounts" />
+  </wsdl:message>
+  <wsdl:message name="GetPlanMaxAmountsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPlanMaxAmountsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPlanMaxAmountsServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetLifetimeMaximumInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLifetimeMaximumInformation" />
+  </wsdl:message>
+  <wsdl:message name="GetLifetimeMaximumInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLifetimeMaximumInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLifetimeMaximumInformationServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetExpenseApprovedAmountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetExpenseApprovedAmount" />
+  </wsdl:message>
+  <wsdl:message name="GetExpenseApprovedAmountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetExpenseApprovedAmountResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetExpenseApprovedAmountServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseExpenseAccountsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBaseExpenseAccounts" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseExpenseAccountsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBaseExpenseAccountsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseExpenseAccountsServiceSecurityHeader">
+    <wsdl:part name="ServiceSecurityHeader" element="tns:ServiceSecurityHeader" />
+  </wsdl:message>
+  <wsdl:portType name="ClaimServiceSoap">
+    <wsdl:operation name="GetClaim">
+      <wsdl:input message="tns:GetClaimSoapIn" />
+      <wsdl:output message="tns:GetClaimSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitClaimBasket">
+      <wsdl:input message="tns:SubmitClaimBasketSoapIn" />
+      <wsdl:output message="tns:SubmitClaimBasketSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenseBasket">
+      <wsdl:input message="tns:SubmitExpenseBasketSoapIn" />
+      <wsdl:output message="tns:SubmitExpenseBasketSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenses">
+      <wsdl:input message="tns:SubmitExpensesSoapIn" />
+      <wsdl:output message="tns:SubmitExpensesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenseNoAdvice">
+      <wsdl:input message="tns:SubmitExpenseNoAdviceSoapIn" />
+      <wsdl:output message="tns:SubmitExpenseNoAdviceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ApproveExpenses">
+      <wsdl:input message="tns:ApproveExpensesSoapIn" />
+      <wsdl:output message="tns:ApproveExpensesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMileageRates">
+      <wsdl:input message="tns:GetMileageRatesSoapIn" />
+      <wsdl:output message="tns:GetMileageRatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlanMaxAmounts">
+      <wsdl:input message="tns:GetPlanMaxAmountsSoapIn" />
+      <wsdl:output message="tns:GetPlanMaxAmountsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLifetimeMaximumInformation">
+      <wsdl:input message="tns:GetLifetimeMaximumInformationSoapIn" />
+      <wsdl:output message="tns:GetLifetimeMaximumInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExpenseApprovedAmount">
+      <wsdl:input message="tns:GetExpenseApprovedAmountSoapIn" />
+      <wsdl:output message="tns:GetExpenseApprovedAmountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseExpenseAccounts">
+      <wsdl:input message="tns:GetBaseExpenseAccountsSoapIn" />
+      <wsdl:output message="tns:GetBaseExpenseAccountsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ClaimServiceSoap" type="tns:ClaimServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetClaim">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/GetClaim" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetClaimServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitClaimBasket">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitClaimBasket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitClaimBasketServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenseBasket">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitExpenseBasket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitExpenseBasketServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenses">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitExpenses" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitExpensesServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenseNoAdvice">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitExpenseNoAdvice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitExpenseNoAdviceServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ApproveExpenses">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/ApproveExpenses" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ApproveExpensesServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMileageRates">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/GetMileageRates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMileageRatesServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPlanMaxAmounts">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/GetPlanMaxAmounts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPlanMaxAmountsServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLifetimeMaximumInformation">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/GetLifetimeMaximumInformation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetLifetimeMaximumInformationServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExpenseApprovedAmount">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/GetExpenseApprovedAmount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetExpenseApprovedAmountServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseExpenseAccounts">
+      <soap:operation soapAction="http://services.lighthouse1.com/services/claim/GetBaseExpenseAccounts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetBaseExpenseAccountsServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ClaimServiceSoap12" type="tns:ClaimServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetClaim">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/GetClaim" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetClaimServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitClaimBasket">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitClaimBasket" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitClaimBasketServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenseBasket">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitExpenseBasket" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitExpenseBasketServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenses">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitExpenses" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitExpensesServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitExpenseNoAdvice">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/SubmitExpenseNoAdvice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitExpenseNoAdviceServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ApproveExpenses">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/ApproveExpenses" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ApproveExpensesServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMileageRates">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/GetMileageRates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMileageRatesServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPlanMaxAmounts">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/GetPlanMaxAmounts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetPlanMaxAmountsServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLifetimeMaximumInformation">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/GetLifetimeMaximumInformation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetLifetimeMaximumInformationServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExpenseApprovedAmount">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/GetExpenseApprovedAmount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetExpenseApprovedAmountServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseExpenseAccounts">
+      <soap12:operation soapAction="http://services.lighthouse1.com/services/claim/GetBaseExpenseAccounts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetBaseExpenseAccountsServiceSecurityHeader" part="ServiceSecurityHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ClaimService">
+    <wsdl:port name="ClaimServiceSoap" binding="tns:ClaimServiceSoap">
+      <soap:address location="https://trainingservices.navigatorsuite.com/ClaimService/ClaimService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ClaimServiceSoap12" binding="tns:ClaimServiceSoap12">
+      <soap12:address location="https://trainingservices.navigatorsuite.com/ClaimService/ClaimService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
