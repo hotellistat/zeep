@@ -238,14 +238,22 @@ where
         }
 
         // write the soap bindings
-        let used_bindings = self
-            .soap_services
-            .iter()
-            .map(|s| &s.binding.name)
-            .collect::<HashSet<_>>();
-        for binding in &self.soap_bindings {
-            if used_bindings.contains(&&binding.name) {
+        // If there are services defined, only write bindings that are referenced by those services
+        // If there are no services, write all bindings (to support WSDLs without service definitions)
+        if self.soap_services.is_empty() {
+            for binding in &self.soap_bindings {
                 binding.write_xml(writer)?;
+            }
+        } else {
+            let used_bindings = self
+                .soap_services
+                .iter()
+                .map(|s| &s.binding.name)
+                .collect::<HashSet<_>>();
+            for binding in &self.soap_bindings {
+                if used_bindings.contains(&&binding.name) {
+                    binding.write_xml(writer)?;
+                }
             }
         }
 

@@ -530,7 +530,7 @@ mod tests {
         assert_eq!(security_header_node.rust_type.xml_name(), Some("ServiceSecurityHeader"));
 
         // Verify that SOAP messages were read (including header messages)
-        assert!(rust_doc.soap_messages.len() > 0);
+        assert!(!rust_doc.soap_messages.is_empty());
 
         // Verify the header message for GetClaim exists
         let header_message = rust_doc
@@ -551,5 +551,90 @@ mod tests {
             .expect("GetClaim operation should exist");
         assert_eq!(get_claim_operation.input.headers.len(), 1);
         assert_eq!(get_claim_operation.input.headers[0].0, "ServiceSecurityHeader");
+    }
+
+    #[test]
+    fn can_read_wsdl_with_headers_in_same_message() {
+        // Exchange WSDL pattern: headers and body parts in the same message
+        const WSDL: &str = r#"<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://test.com/"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://test.com/">
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://test.com/">
+            <s:element name="TestRequest" type="s:string"/>
+            <s:element name="TestResponse" type="s:string"/>
+            <s:element name="TestHeader" type="s:string"/>
+        </s:schema>
+    </wsdl:types>
+    
+    <wsdl:message name="TestSoapIn">
+        <wsdl:part name="parameters" element="tns:TestRequest"/>
+        <wsdl:part name="TestHeader" element="tns:TestHeader"/>
+    </wsdl:message>
+    
+    <wsdl:message name="TestSoapOut">
+        <wsdl:part name="parameters" element="tns:TestResponse"/>
+    </wsdl:message>
+    
+    <wsdl:portType name="TestPortType">
+        <wsdl:operation name="TestOperation">
+            <wsdl:input message="tns:TestSoapIn"/>
+            <wsdl:output message="tns:TestSoapOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="TestBinding" type="tns:TestPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="TestOperation">
+            <soap:operation soapAction="http://test.com/TestOperation"/>
+            <wsdl:input>
+                <soap:body parts="parameters" use="literal"/>
+                <soap:header message="tns:TestSoapIn" part="TestHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body parts="parameters" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="TestService">
+        <wsdl:port name="TestPort" binding="tns:TestBinding">
+            <soap:address location="http://test.com/service"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>"#;
+
+        let rust_doc = XmlReader::read_xml_from_file("test.wsdl", WSDL).unwrap();
+
+        // Check that the message was read with both parts
+        let test_message = rust_doc
+            .soap_messages
+            .iter()
+            .find(|m| m.xml_name == "TestSoapIn")
+            .expect("TestSoapIn message should exist");
+
+        assert_eq!(test_message.parts.len(), 2, "Message should have 2 parts");
+        assert!(
+            test_message.parts.contains_key("parameters"),
+            "Should have 'parameters' part"
+        );
+        assert!(
+            test_message.parts.contains_key("TestHeader"),
+            "Should have 'TestHeader' part"
+        );
+
+        // Check that the binding was read with the header
+        assert_eq!(rust_doc.soap_bindings.len(), 1);
+        let binding = &rust_doc.soap_bindings[0];
+        let operation = binding
+            .operations
+            .get("TestOperation")
+            .expect("TestOperation should exist");
+
+        assert_eq!(operation.input.headers.len(), 1, "Operation should have 1 header");
+        assert_eq!(operation.input.headers[0].0, "TestHeader");
     }
 }
