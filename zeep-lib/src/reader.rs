@@ -640,10 +640,5 @@ mod tests {
             login_response.in_namespace.as_ref().unwrap().namespace,
             "http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd"
         );
-
-        // // print the rust code
-        // let mut xml_output: Vec<u8> = Vec::new();
-        // rust_doc.write_xml(&mut xml_output).unwrap();
-        // println!("{}", String::from_utf8(xml_output).unwrap());
     }
 }
