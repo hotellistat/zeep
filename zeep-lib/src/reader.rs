@@ -217,6 +217,11 @@ impl XmlReader {
     }
 
     fn read_xsd<'n>(node: Node<'n, 'n>, files: &Files, doc: &mut RustDocument) -> WriterResult<()> {
+        // Switch to the schema's target namespace if it has one
+        if let Some(target_namespace) = node.attribute("targetNamespace") {
+            doc.switch_to_target_namespace(target_namespace);
+        }
+
         for child in node.children() {
             if child.tag_name().name() == "import" {
                 doc.extend(Self::process_import(child, files)?);
@@ -556,56 +561,7 @@ mod tests {
     #[test]
     fn can_read_wsdl_with_headers_in_same_message() {
         // Exchange WSDL pattern: headers and body parts in the same message
-        const WSDL: &str = r#"<?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:tns="http://test.com/"
-                  xmlns:s="http://www.w3.org/2001/XMLSchema"
-                  targetNamespace="http://test.com/">
-    <wsdl:types>
-        <s:schema elementFormDefault="qualified" targetNamespace="http://test.com/">
-            <s:element name="TestRequest" type="s:string"/>
-            <s:element name="TestResponse" type="s:string"/>
-            <s:element name="TestHeader" type="s:string"/>
-        </s:schema>
-    </wsdl:types>
-    
-    <wsdl:message name="TestSoapIn">
-        <wsdl:part name="parameters" element="tns:TestRequest"/>
-        <wsdl:part name="TestHeader" element="tns:TestHeader"/>
-    </wsdl:message>
-    
-    <wsdl:message name="TestSoapOut">
-        <wsdl:part name="parameters" element="tns:TestResponse"/>
-    </wsdl:message>
-    
-    <wsdl:portType name="TestPortType">
-        <wsdl:operation name="TestOperation">
-            <wsdl:input message="tns:TestSoapIn"/>
-            <wsdl:output message="tns:TestSoapOut"/>
-        </wsdl:operation>
-    </wsdl:portType>
-    
-    <wsdl:binding name="TestBinding" type="tns:TestPortType">
-        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="TestOperation">
-            <soap:operation soapAction="http://test.com/TestOperation"/>
-            <wsdl:input>
-                <soap:body parts="parameters" use="literal"/>
-                <soap:header message="tns:TestSoapIn" part="TestHeader" use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body parts="parameters" use="literal"/>
-            </wsdl:output>
-        </wsdl:operation>
-    </wsdl:binding>
-    
-    <wsdl:service name="TestService">
-        <wsdl:port name="TestPort" binding="tns:TestBinding">
-            <soap:address location="http://test.com/service"/>
-        </wsdl:port>
-    </wsdl:service>
-</wsdl:definitions>"#;
+        const WSDL: &str = include_str!("../test-data/headers_in_same_message.wsdl");
 
         let rust_doc = XmlReader::read_xml_from_file("test.wsdl", WSDL).unwrap();
 
@@ -636,5 +592,58 @@ mod tests {
 
         assert_eq!(operation.input.headers.len(), 1, "Operation should have 1 header");
         assert_eq!(operation.input.headers[0].0, "TestHeader");
+    }
+
+    #[test]
+    fn can_handle_multi_namespace_wsdl() {
+        const WSDL: &str = include_str!("../test-data/multi_namespace.wsdl");
+        let files = Files::new("multi_namespace.wsdl", WSDL);
+        let (file_name, file) = files.map.get_key_value("multi_namespace.wsdl").unwrap();
+        let rust_doc = XmlReader::read_xml_internal(file, file_name, &files).unwrap();
+
+        // Verify all nodes were read (2 elements from first schema, 3 types from second schema)
+        assert_eq!(rust_doc.nodes.len(), 5);
+
+        // Verify first namespace (security service)
+        let security_ns = rust_doc
+            .target_namespaces
+            .iter()
+            .find(|ns| ns.namespace == "http://services.lighthouse1.com/services/security/")
+            .expect("Security namespace should exist");
+        assert_eq!(security_ns.abbreviation, "sec1");
+
+        // Verify second namespace (security messages)
+        let messages_ns = rust_doc
+            .target_namespaces
+            .iter()
+            .find(|ns| ns.namespace == "http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd")
+            .expect("SecurityMessages namespace should exist");
+        assert_eq!(messages_ns.abbreviation, "sec");
+
+        // Verify nodes are in correct namespaces
+        let login_by_token = rust_doc
+            .nodes
+            .iter()
+            .find(|n| n.rust_type.xml_name() == Some("LoginByToken"))
+            .expect("LoginByToken should exist");
+        assert_eq!(
+            login_by_token.in_namespace.as_ref().unwrap().namespace,
+            "http://services.lighthouse1.com/services/security/"
+        );
+
+        let login_response = rust_doc
+            .nodes
+            .iter()
+            .find(|n| n.rust_type.xml_name() == Some("LoginResponseByToken"))
+            .expect("LoginResponseByToken should exist");
+        assert_eq!(
+            login_response.in_namespace.as_ref().unwrap().namespace,
+            "http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd"
+        );
+
+        // // print the rust code
+        // let mut xml_output: Vec<u8> = Vec::new();
+        // rust_doc.write_xml(&mut xml_output).unwrap();
+        // println!("{}", String::from_utf8(xml_output).unwrap());
     }
 }
