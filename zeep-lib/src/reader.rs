@@ -640,5 +640,31 @@ mod tests {
             login_response.in_namespace.as_ref().unwrap().namespace,
             "http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd"
         );
+
+        // Test that generated code includes all referenced namespaces in yaserde annotations
+        let mut generated_code: Vec<u8> = Vec::new();
+        rust_doc.write_xml(&mut generated_code).unwrap();
+        let code_str = String::from_utf8(generated_code).unwrap();
+
+        // LoginByTokenResponse should have both sec1 and sec namespaces in its yaserde annotation
+        // because it references a field from the sec namespace
+        let login_by_token_response_start = code_str
+            .find("pub struct LoginByTokenResponse")
+            .expect("LoginByTokenResponse not found");
+        let yaserde_attr_start = code_str[..login_by_token_response_start]
+            .rfind("#[yaserde(")
+            .expect("yaserde attribute not found");
+        let yaserde_attr_end = login_by_token_response_start;
+        let yaserde_attr = &code_str[yaserde_attr_start..yaserde_attr_end];
+
+        // Check that both namespaces are present
+        assert!(
+            yaserde_attr.contains(r#""sec1" = "http://services.lighthouse1.com/services/security/""#),
+            "yaserde should include sec1 namespace (struct's own namespace)"
+        );
+        assert!(
+            yaserde_attr.contains(r#""sec" = "http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd""#),
+            "yaserde should include sec namespace because LoginByTokenResult field references it"
+        );
     }
 }
