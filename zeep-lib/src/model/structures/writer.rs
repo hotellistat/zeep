@@ -163,7 +163,7 @@ where
 
         let namespaces_str = namespaces
             .iter()
-            .map(|(abbr, ns)| format!("\"{}\" = \"{}\"", abbr, ns))
+            .map(|(abbr, ns)| format!("\"{abbr}\" = \"{ns}\""))
             .collect::<Vec<_>>()
             .join(", ");
 
