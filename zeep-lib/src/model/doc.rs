@@ -121,7 +121,8 @@ impl RustDocument {
                 .find(|ns| ns.namespace == namespace)
                 .cloned()
                 .unwrap_or_else(|| {
-                    let abbreviation = make_abbreviated_namespace(namespace, &self.target_namespaces);
+                    // Check against all namespaces (not just target_namespaces) to avoid abbreviation conflicts
+                    let abbreviation = make_abbreviated_namespace(namespace, &self.namespaces);
                     let rust_mod_name = create_mod_name_for_namespace(&abbreviation);
 
                     Rc::new(Namespace {

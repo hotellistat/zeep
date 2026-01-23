@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema"
+    xmlns:s1="http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    targetNamespace="http://services.lighthouse1.com/services/security/">
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified"
+            targetNamespace="http://services.lighthouse1.com/services/security/">
+            <s:import
+                namespace="http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd" />
+            <s:element name="LoginByToken">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="LoginByTokenResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" ref="s1:LoginByTokenResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+        </s:schema>
+        <s:schema elementFormDefault="qualified"
+            targetNamespace="http://services.lighthouse1.com/SecurityService/SecurityMessages.xsd">
+            <s:element name="LoginByTokenResult" type="s1:LoginResponseByToken" />
+            <s:complexType name="LoginResponseByToken">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="LoginResult"
+                        type="s1:LoginResultByToken" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="LoginResultByToken">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="AdminAlias" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Admins" type="s1:ArrayOfString" />
+                    <s:element minOccurs="1" maxOccurs="1" name="BusinessPartyId" nillable="true"
+                        type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="LoginStatus" type="s1:LoginStatus" />
+                    <s:element minOccurs="0" maxOccurs="1" name="SessionId" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+        </s:schema>
+    </wsdl:types>
+</wsdl:definitions>

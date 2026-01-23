@@ -147,11 +147,30 @@ where
 
     writeln!(writer, "#[derive(Debug, Default, YaSerialize, YaDeserialize)]")?;
     if let Some(tns) = &target_namespace {
-        let namespaces = format!("\"{}\" = \"{}\"", tns.abbreviation, tns.namespace);
+        // Collect all unique namespaces: the struct's own namespace plus any referenced by fields
+        let mut namespaces = vec![(tns.abbreviation.as_str(), tns.namespace.as_str())];
+
+        for field in fields {
+            if let Some(field_ns) = &field.target_namespace {
+                // Only add if it's different from the struct's namespace and not already added
+                if field_ns.namespace != tns.namespace
+                    && !namespaces.iter().any(|(_, ns)| *ns == field_ns.namespace.as_str())
+                {
+                    namespaces.push((field_ns.abbreviation.as_str(), field_ns.namespace.as_str()));
+                }
+            }
+        }
+
+        let namespaces_str = namespaces
+            .iter()
+            .map(|(abbr, ns)| format!("\"{abbr}\" = \"{ns}\""))
+            .collect::<Vec<_>>()
+            .join(", ");
+
         writeln!(
             writer,
             "#[yaserde(prefix = \"{}\", namespaces = {{{}}}, rename = \"{}\")]",
-            tns.abbreviation, namespaces, xml_name
+            tns.abbreviation, namespaces_str, xml_name
         )?;
     }
     writeln!(writer, "pub struct {rust_name} {{")?;
