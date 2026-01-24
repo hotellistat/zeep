@@ -41,10 +41,11 @@ impl<'n> TryFromNode<'n> for Field {
 
         let is_attribute = node.tag_name().name() == "attribute";
         let parent_is_optional = node.parent().and_then(|n| n.attribute("minOccurs")) == Some("0");
+        let is_nillable = node.attribute("nillable") == Some("true");
         let is_optional = if is_attribute {
             node.attribute("use") != Some("required")
         } else {
-            node.attribute("minOccurs") == Some("0") || parent_is_optional
+            node.attribute("minOccurs") == Some("0") || parent_is_optional || is_nillable
         };
         let parent_is_vec = node.parent().and_then(|n| n.attribute("maxOccurs")) == Some("unbounded");
         let is_vec = Node::attribute(&node, "maxOccurs") == Some("unbounded") || parent_is_vec;
@@ -477,5 +478,70 @@ mod tests {
             String::from_utf8(buffer).unwrap(),
             "    #[yaserde(rename = \"HeaderName\", attribute = true)]\n    pub header_name: String,\n"
         );
+    }
+
+    #[test]
+    fn nillable_field_with_min_occurs_1_should_be_optional() {
+        // Test case: minOccurs="1" maxOccurs="1" nillable="true" should result in Option<T>
+        const NILLABLE_FIELD: &str = r#"<s:element minOccurs="1" maxOccurs="1" name="BusinessPartyId" nillable="true" type="s:int" xmlns:s="http://www.w3.org/2001/XMLSchema"/>"#;
+        let doc = roxmltree::Document::parse(NILLABLE_FIELD).unwrap();
+        let node = doc.root_element();
+        let mut rust_doc = RustDocument::init(&doc);
+        let field = Field::try_from_node(node, &mut rust_doc).unwrap();
+        
+        assert_eq!(field.xml_name, "BusinessPartyId");
+        assert_eq!(field.rust_name, "business_party_id");
+        assert_eq!(field.rust_type, RustFieldType::I32);
+        assert!(field.is_optional, "Field with nillable='true' should be optional even when minOccurs='1'");
+        assert!(!field.is_vec);
+    }
+
+    #[test]
+    fn can_write_nillable_field_as_option() {
+        // Test that nillable field is written as Option<T>
+        let field = Field {
+            xml_name: "BusinessPartyId".to_string(),
+            rust_name: "business_party_id".to_string(),
+            rust_type: RustFieldType::I32,
+            is_optional: true,
+            ..Default::default()
+        };
+        
+        let mut buffer = Vec::new();
+        field.write_xml(&mut buffer).unwrap();
+        let output = String::from_utf8(buffer).unwrap();
+        
+        assert!(output.contains("Option<i32>"), "Nillable field should be written as Option<i32>");
+        assert_eq!(
+            output,
+            "    #[yaserde(rename = \"BusinessPartyId\")]\n    pub business_party_id: Option<i32>,\n"
+        );
+    }
+
+    #[test]
+    fn nillable_false_with_min_occurs_1_should_not_be_optional() {
+        // Test case: minOccurs="1" maxOccurs="1" nillable="false" should NOT result in Option<T>
+        const NON_NILLABLE_FIELD: &str = r#"<s:element minOccurs="1" maxOccurs="1" name="RequiredField" nillable="false" type="s:int" xmlns:s="http://www.w3.org/2001/XMLSchema"/>"#;
+        let doc = roxmltree::Document::parse(NON_NILLABLE_FIELD).unwrap();
+        let node = doc.root_element();
+        let mut rust_doc = RustDocument::init(&doc);
+        let field = Field::try_from_node(node, &mut rust_doc).unwrap();
+        
+        assert_eq!(field.xml_name, "RequiredField");
+        assert!(!field.is_optional, "Field with nillable='false' and minOccurs='1' should NOT be optional");
+    }
+
+    #[test]
+    fn nillable_with_unbounded_should_still_be_vec() {
+        // Test case: nillable="true" with maxOccurs="unbounded" should result in Vec<T>, not Option<Vec<T>>
+        const NILLABLE_VEC_FIELD: &str = r#"<s:element minOccurs="0" maxOccurs="unbounded" name="Items" nillable="true" type="s:string" xmlns:s="http://www.w3.org/2001/XMLSchema"/>"#;
+        let doc = roxmltree::Document::parse(NILLABLE_VEC_FIELD).unwrap();
+        let node = doc.root_element();
+        let mut rust_doc = RustDocument::init(&doc);
+        let field = Field::try_from_node(node, &mut rust_doc).unwrap();
+        
+        assert_eq!(field.xml_name, "Items");
+        assert!(field.is_vec, "Field with maxOccurs='unbounded' should be a Vec");
+        // Note: is_vec takes precedence over is_optional in the write_xml logic
     }
 }
