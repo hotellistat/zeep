@@ -488,11 +488,14 @@ mod tests {
         let node = doc.root_element();
         let mut rust_doc = RustDocument::init(&doc);
         let field = Field::try_from_node(node, &mut rust_doc).unwrap();
-        
+
         assert_eq!(field.xml_name, "BusinessPartyId");
         assert_eq!(field.rust_name, "business_party_id");
         assert_eq!(field.rust_type, RustFieldType::I32);
-        assert!(field.is_optional, "Field with nillable='true' should be optional even when minOccurs='1'");
+        assert!(
+            field.is_optional,
+            "Field with nillable='true' should be optional even when minOccurs='1'"
+        );
         assert!(!field.is_vec);
     }
 
@@ -506,12 +509,15 @@ mod tests {
             is_optional: true,
             ..Default::default()
         };
-        
+
         let mut buffer = Vec::new();
         field.write_xml(&mut buffer).unwrap();
         let output = String::from_utf8(buffer).unwrap();
-        
-        assert!(output.contains("Option<i32>"), "Nillable field should be written as Option<i32>");
+
+        assert!(
+            output.contains("Option<i32>"),
+            "Nillable field should be written as Option<i32>"
+        );
         assert_eq!(
             output,
             "    #[yaserde(rename = \"BusinessPartyId\")]\n    pub business_party_id: Option<i32>,\n"
@@ -526,9 +532,12 @@ mod tests {
         let node = doc.root_element();
         let mut rust_doc = RustDocument::init(&doc);
         let field = Field::try_from_node(node, &mut rust_doc).unwrap();
-        
+
         assert_eq!(field.xml_name, "RequiredField");
-        assert!(!field.is_optional, "Field with nillable='false' and minOccurs='1' should NOT be optional");
+        assert!(
+            !field.is_optional,
+            "Field with nillable='false' and minOccurs='1' should NOT be optional"
+        );
     }
 
     #[test]
@@ -539,7 +548,7 @@ mod tests {
         let node = doc.root_element();
         let mut rust_doc = RustDocument::init(&doc);
         let field = Field::try_from_node(node, &mut rust_doc).unwrap();
-        
+
         assert_eq!(field.xml_name, "Items");
         assert!(field.is_vec, "Field with maxOccurs='unbounded' should be a Vec");
         // Note: is_vec takes precedence over is_optional in the write_xml logic
