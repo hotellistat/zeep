@@ -64,9 +64,19 @@ fn read_complex_content_node(element_name: &str, mut node: Node, doc: &mut RustD
     let mut base_fields = vec![];
     import_extension_fields(&mut node, doc, &mut base_fields)?;
 
-    for n in node.children().filter(Node::is_element) {
+    for mut n in node.children().filter(Node::is_element) {
         if n.tag_name().name() == "sequence" {
             import_sequence_node_fields(&mut node, doc, &mut base_fields)?;
+        }
+        if n.tag_name().name() == "restriction" {
+            let has_sequence = n
+                .children()
+                .any(|c| c.is_element() && c.tag_name().name() == "sequence");
+            if has_sequence {
+                import_sequence_node_fields(&mut n, doc, &mut base_fields)?;
+            } else {
+                copy_fields_from_base(&mut n, doc, &mut base_fields)?;
+            }
         }
     }
 
@@ -94,6 +104,31 @@ fn read_sequence_node(element_name: &str, mut node: Node, doc: &mut RustDocument
     };
 
     Ok(struct_props)
+}
+
+fn copy_fields_from_base(node: &mut Node, doc: &mut RustDocument, base_fields: &mut Vec<Field>) -> WriterResult<()> {
+    let xml_name = node
+        .attribute("base")
+        .ok_or_else(|| WriterError::attribute_missing(node, "base"))?;
+    let (xml_name, namespace_abbreviation) = resolve_type(xml_name, doc);
+    let base_node = doc
+        .find_node_by_xml_name(node, xml_name, namespace_abbreviation.as_deref())
+        .ok_or_else(|| WriterError::NodeNotFound(xml_name.to_string()))?;
+    match &base_node.rust_type {
+        RustType::Ignore => {
+            // unsupported type
+        }
+        RustType::Complex(struct_props) => {
+            base_fields.clone_from(&struct_props.fields);
+        }
+        RustType::Element(_element_props) => {
+            // unsupported type
+        }
+        RustType::Simple(_simple_props) => {
+            // unsupported type
+        }
+    }
+    Ok(())
 }
 
 fn import_sequence_node_fields(
@@ -139,29 +174,7 @@ fn import_extension_fields(node: &mut Node, doc: &mut RustDocument, base_fields:
         .children()
         .find(|n| n.is_element() && n.tag_name().name() == "extension")
     {
-        // look in doc for the node with the same xml_name
-        let xml_name = base
-            .attribute("base")
-            .ok_or_else(|| WriterError::attribute_missing(node, "base"))?;
-        let (xml_name, namespace_abbreviation) = resolve_type(xml_name, doc);
-        let base_node = doc
-            .find_node_by_xml_name(node, xml_name, namespace_abbreviation.as_deref())
-            .ok_or_else(|| WriterError::NodeNotFound(xml_name.to_string()))?;
-
-        match &base_node.rust_type {
-            RustType::Ignore => {
-                // unsupported type
-            }
-            RustType::Complex(struct_props) => {
-                base_fields.clone_from(&struct_props.fields);
-            }
-            RustType::Element(_element_props) => {
-                // unsupported type
-            }
-            RustType::Simple(_simple_props) => {
-                // unsupported type
-            }
-        }
+        copy_fields_from_base(&mut base, doc, base_fields)?;
 
         for n in base.children().filter(Node::is_element) {
             if n.tag_name().name() == "sequence" {
@@ -208,5 +221,34 @@ mod tests {
         let doc = roxmltree::Document::parse(XML).unwrap();
         let rust_node = parse_from_xml::<ComplexProps>(&doc);
         assert_eq!(rust_node.xml_name, "ReplyBody");
+    }
+
+    #[test]
+    fn can_parse_complex_content_restriction_fields() {
+        const XML: &str = r#"
+<xs:complexType name="FizzType" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fb="http://example.com/fizzbuzz">
+    <xs:complexContent>
+        <xs:restriction base="fb:BuzzType">
+            <xs:sequence>
+                <xs:element name="fizz" type="xs:string"/>
+                <xs:element name="buzz" type="xs:string" minOccurs="0"/>
+                <xs:element name="bar" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:restriction>
+    </xs:complexContent>
+</xs:complexType>
+"#;
+
+        let doc = roxmltree::Document::parse(XML).unwrap();
+        let rust_node = parse_from_xml::<ComplexProps>(&doc);
+        assert_eq!(rust_node.xml_name, "FizzType");
+        assert_eq!(
+            rust_node.fields.len(),
+            3,
+            "complexContent/restriction sequence fields must be generated"
+        );
+        assert_eq!(rust_node.fields[0].xml_name, "fizz");
+        assert_eq!(rust_node.fields[1].xml_name, "buzz");
+        assert_eq!(rust_node.fields[2].xml_name, "bar");
     }
 }
